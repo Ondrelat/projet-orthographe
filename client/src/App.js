@@ -4,7 +4,7 @@ import './App.css';
 
 function App() {
   // Mot à taper
-  const [sentence] = useState('une phrase exemple');
+  const [sentence, setSentence] = useState('');
   const words = sentence.split(' ');
 
   const [correctWords, setCorrectWords] = useState([]);
@@ -20,6 +20,7 @@ function App() {
       const response = await axios.get('http://localhost:3000/dictations/1');
       // Met à jour l'URL de l'audio
       setAudioUrl(response.data.audioURL); // Remplacer 'audioURL' par le nom de la propriété appropriée
+      setSentence(response.data.text);
     } catch (error) {
       console.error('Erreur lors de la récupération de l\'audio', error);
     }
