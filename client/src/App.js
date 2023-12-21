@@ -30,6 +30,17 @@ function App() {
     fetchDictationAudio();
   }, []);
 
+  const fetchHelperForWord = async (word) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/helper/${word}`);
+      const helperData = response.data;
+      // Utilisez ici les données obtenues pour afficher l'aide ou la suggestion
+      console.log(helperData); // Par exemple, afficher les données dans la console
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l’aide', error);
+    }
+  };
+
   const handleInputChange = (e) => {
     const input = e.target.value;
     setUserInput(input);
@@ -46,7 +57,12 @@ function App() {
           // Ici, tu peux ajouter une logique supplémentaire pour gérer la fin de la phrase
         }
       }
-    } else {
+      else {
+        console.log('Wrong word');
+        fetchHelperForWord(currentWord);
+      }
+    }
+    else {
       // Gérer le cas où tous les mots ont été saisis correctement
       console.log('Toute la phrase a été saisie');
     }
