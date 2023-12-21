@@ -13,8 +13,7 @@ function App() {
   const [userInput, setUserInput] = useState('');
   // URL de l'audio de la dictée
   const [audioUrl, setAudioUrl] = useState('');
-  //Helper
-  const [rule, setRule] = useState('');
+  const [rule, setRule] = useState('');   //Helper
 
   // Fonction pour récupérer l'audio de la dictée
   const fetchDictationAudio = async () => {
@@ -45,29 +44,25 @@ function App() {
   };
 
   const handleInputChange = (e) => {
-    const input = e.target.value;
-    setUserInput(input);
+    setUserInput(e.target.value);
+  };
 
-    if (correctWords.length < words.length) {
+  const handleKeyUp = (e) => {
+    if (e.key === ' ' || e.keyCode === 32) {
+      // La logique à exécuter lorsque la touche Espace est pressée
       const currentWord = words[correctWords.length];
 
-      if (input.trim().toLowerCase() === currentWord.toLowerCase()) {
+      if (userInput.trim().toLowerCase() === currentWord.toLowerCase()) {
         setCorrectWords([...correctWords, currentWord]);
-        setUserInput('');
-
+        setUserInput(''); // Réinitialiser l'entrée pour le prochain mot
+        setRule(''); // Effacer la règle
         if (correctWords.length + 1 === words.length) {
           console.log('Complete sentence typed correctly');
-          // Ici, tu peux ajouter une logique supplémentaire pour gérer la fin de la phrase
         }
-      }
-      else {
-        console.log('Wrong word');
+      } else {
+        console.log('Mot incorrect');
         fetchHelperForWord(currentWord);
       }
-    }
-    else {
-      // Gérer le cas où tous les mots ont été saisis correctement
-      console.log('Toute la phrase a été saisie');
     }
   };
 
@@ -81,6 +76,7 @@ function App() {
           type="text"
           value={userInput}
           onChange={handleInputChange}
+          onKeyUp={handleKeyUp}
           placeholder="Tapez le mot ici"
         />
         {rule && <div className="info-bulle">{rule}</div>}
