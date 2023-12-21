@@ -13,6 +13,8 @@ function App() {
   const [userInput, setUserInput] = useState('');
   // URL de l'audio de la dictée
   const [audioUrl, setAudioUrl] = useState('');
+  //Helper
+  const [rule, setRule] = useState('');
 
   // Fonction pour récupérer l'audio de la dictée
   const fetchDictationAudio = async () => {
@@ -34,6 +36,7 @@ function App() {
     try {
       const response = await axios.get(`http://localhost:3000/helper/${word}`);
       const helperData = response.data;
+      setRule(helperData.rule);
       // Utilisez ici les données obtenues pour afficher l'aide ou la suggestion
       console.log(helperData); // Par exemple, afficher les données dans la console
     } catch (error) {
@@ -80,6 +83,7 @@ function App() {
           onChange={handleInputChange}
           placeholder="Tapez le mot ici"
         />
+        {rule && <div className="info-bulle">{rule}</div>}
         {/* Afficher l'audio si l'URL est disponible */}
         {audioUrl && <audio src={audioUrl} controls />}
 
