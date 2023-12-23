@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  overflow-x: hidden;
+  /* Empêche le débordement horizontal */
 }
 
 .App-logo {
@@ -22,6 +24,12 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  width: 100%;
+  /* Assure que le header ne dépasse pas la largeur de l'écran */
+  max-width: 100%;
+  /* Empêche le header de dépasser la largeur de l'écran */
+  box-sizing: border-box;
+  /* Inclut padding et border dans la largeur totale */
 }
 
 .App-link {
@@ -35,6 +43,8 @@
   border-radius: 5px;
   background-color: #f9f9f9;
   color: black;
+  word-wrap: break-word;
+  /* Empêche le débordement de texte dans les info-bulles */
 }
 
 @keyframes App-logo-spin {

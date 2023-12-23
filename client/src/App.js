@@ -22,27 +22,27 @@ function App() {
   const [audioUrl, setAudioUrl] = useState('');
   const [rule, setRule] = useState('');   //Helper
 
-  // Fonction pour récupérer l'audio de la dictée
-  const fetchDictationAudio = async () => {
+  const fetchDictationAudio = async (difficultyLevel) => {
     try {
-      const response = await axios.get('http://localhost:3000/dictations/1');
-      // Met à jour l'URL de l'audio
+      const response = await axios.get(`http://localhost:3000/dictations/randomDictation/${difficultyLevel}`);
       setAudioUrl(response.data.audioURL); // Remplacer 'audioURL' par le nom de la propriété appropriée
       setSentence(response.data.text);
+      // Reste de la logique pour mettre à jour l'état avec la dictée reçue
     } catch (error) {
-      console.error('Erreur lors de la récupération de l\'audio', error);
+      console.error('Erreur lors de la récupération de la dictée', error);
     }
   };
 
+  //hook qui permet d'attendre que tout le rendu est construit pour se lancer
   useEffect(() => {
-    fetchDictationAudio();
+    fetchDictationAudio(1);
   }, []);
 
   const fetchHelperForWord = async (word) => {
     try {
-      const response = await axios.get(`http://localhost:3000/helper/${word}`);
+      const response = await axios.get(`http://localhost:3000/helper/word/${word}/most-votes`);
       const helperData = response.data;
-      setRule(helperData.rule);
+      setRule(helperData.description);
       // Utilisez ici les données obtenues pour afficher l'aide ou la suggestion
       console.log(helperData); // Par exemple, afficher les données dans la console
     } catch (error) {
