@@ -5,12 +5,19 @@ import './App.css';
 function App() {
   // Mot à taper
   const [sentence, setSentence] = useState('');
+
   const words = sentence.split(' ');
 
   const [correctWords, setCorrectWords] = useState([]);
 
+  const [isCurrentInputCorrect, setIsCurrentInputCorrect] = useState(true);
+
   // Saisie de l'utilisateur
   const [userInput, setUserInput] = useState('');
+
+  // La dernière saisie utilisateur pour détecter qu'il essaie de changer quelque chose
+  const [prevInput, setPrevInput] = useState('');
+
   // URL de l'audio de la dictée
   const [audioUrl, setAudioUrl] = useState('');
   const [rule, setRule] = useState('');   //Helper
@@ -44,7 +51,14 @@ function App() {
   };
 
   const handleInputChange = (e) => {
-    setUserInput(e.target.value);
+    const newValue = e.target.value;
+
+    // Réinitialiser la couleur si l'utilisateur commence à modifier le mot
+    if (newValue !== prevInput) {
+      setIsCurrentInputCorrect(true);
+    }
+
+    setUserInput(newValue);
   };
 
   const handleKeyUp = (e) => {
@@ -56,14 +70,17 @@ function App() {
         setCorrectWords([...correctWords, currentWord]);
         setUserInput(''); // Réinitialiser l'entrée pour le prochain mot
         setRule(''); // Effacer la règle
+        setIsCurrentInputCorrect(true);//Pour enlever le fait que les l'input soient en rouge
         if (correctWords.length + 1 === words.length) {
           console.log('Complete sentence typed correctly');
         }
       } else {
         console.log('Mot incorrect');
+        setIsCurrentInputCorrect(false);
         fetchHelperForWord(currentWord);
       }
     }
+    setPrevInput(userInput);
   };
 
   return (
@@ -71,7 +88,11 @@ function App() {
       <header className="App-header">
 
         <p>Le mot à taper est : {sentence}</p>
-        <p>Mots corrects : {correctWords.join(' ')}</p>
+        <p>Mots corrects :&nbsp;
+          <span style={{ color: 'green' }}>{correctWords.join(' ')}</span>&nbsp;
+          <span style={{ color: isCurrentInputCorrect ? 'inherit' : 'red' }}>
+            {userInput}
+          </span></p>
         <input
           type="text"
           value={userInput}

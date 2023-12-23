@@ -15,7 +15,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: [
         "dist/**/*.entity{.ts,.js}"
       ],
-      synchronize: false
+      synchronize: false,
+      logging: true
     }),
     DictationModule,
     // autres modules
