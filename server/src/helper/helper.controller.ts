@@ -3,15 +3,16 @@ import { HelperService } from './helper.service';
 import { Helper } from './helper.entity';
 import { Word } from './word.entity';
 
-@Controller('helper')
+@Controller('helpers')
 export class HelperController {
     constructor(private readonly helperService: HelperService) { }
 
     @Get('/word/:word')
-    findByWord(@Param('word') word: string) {
-        return this.helperService.findByWord(word);
+    findHelperAndDescriptionsByWord(@Param('word') word: string) {
+        return this.helperService.findHelperAndDescriptionsByWord(word);
     }
 
+    /*
     @Get(':id')
     findOne(@Param('id') id: number) {
         return this.helperService.findOne(id);
@@ -26,4 +27,5 @@ export class HelperController {
         }
         return helper;
     }
+    */
 }
