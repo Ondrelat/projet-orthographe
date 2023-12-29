@@ -8,16 +8,16 @@ export class HelperWord {
   id: number;
 
   @Column()
-  idWord: number;
+  wordId: number;
 
   @Column()
-  idHelper: number;
+  helperId: number;
 
   @ManyToOne(() => Word, word => word.helperswords)
-  @JoinColumn({ name: 'idWord' }) // Assurez-vous que cette colonne correspond à la clé étrangère
+  @JoinColumn({ name: 'wordId' }) // Assurez-vous que cette colonne correspond à la clé étrangère
   word: Word;
 
   @ManyToOne(() => Helper, helper => helper.helperswords)
-  @JoinColumn({ name: 'idHelper' }) // Assurez-vous que cette colonne correspond à la clé étrangère
+  @JoinColumn({ name: 'helperId' }) // Assurez-vous que cette colonne correspond à la clé étrangère
   helper: Helper;
 }

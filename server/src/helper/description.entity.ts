@@ -12,10 +12,10 @@ export class Description {
   title: string;
 
   @Column({ nullable: true })
-  idHelper: number;
+  helperId: number;
 
   @Column({ nullable: true })
-  idType: number;
+  typeId: number;
 
   @Column('text')
   text: string;

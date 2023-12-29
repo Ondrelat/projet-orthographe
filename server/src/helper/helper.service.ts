@@ -16,12 +16,14 @@ export class HelperService {
         private wordRepository: Repository<Word>,
         @InjectRepository(HelperWord)
         private helperWordRepository: Repository<HelperWord>,
+        @InjectRepository(HelperWord)
+        private helperRepository: Repository<Helper>,
         @InjectRepository(Description)
         private descriptionRepository: Repository<Description>,
         // Vous pourriez avoir besoin d'injecter d'autres dépôts si nécessaire
     ) { }
 
-    async findHelperAndDescriptionsByWord(wordName: string): Promise<any> {
+    async findHelperByWordWithDescription(wordName: string): Promise<any> {
         const word = await this.wordRepository.findOne({ where: { name: wordName } });
     
         if (!word) return undefined;
@@ -29,47 +31,39 @@ export class HelperService {
         // Trouvez les HelperWord associés, puis les Helpers
         const helperWords = await this.helperWordRepository.find({ 
             where: { word: word },
-            relations: ['helper'] // Assurez-vous que cette relation est configurée dans HelperWord
+            relations: {
+                helper: {
+                    descriptions: true,
+                },
+            },// Assurez-vous que cette relation est configurée dans HelperWord
         });
-    
-        // Préparer un tableau pour stocker les helpers avec leurs descriptions
-        const helpersWithDescriptions = [];
-    
-        for (const hw of helperWords) {
-            const helper = hw.helper;
-    
-            // Récupérer les descriptions pour le helper actuel
-            const descriptions = await this.descriptionRepository.find({
-                where: { idHelper: helper.id }
-            });
-    
-            // Ajouter le helper et ses descriptions dans le tableau
-            helpersWithDescriptions.push({ helper, descriptions });
-        }
-    
-        return helpersWithDescriptions;
+
+        return helperWords;
     }
 
-       /* 
-    async findByWordWithMostVotes(wordName: string): Promise<Helper | undefined> {
-        // Trouvez d'abord l'entité Word correspondant au mot donné
+       
+    async findByWordWithMostVotes(wordName: string): Promise<any> {
         const word = await this.wordRepository.findOne({ where: { name: wordName } });
-
-        // Si le mot existe, utilisez createQueryBuilder pour trouver le helper avec le plus grand nombre de votes
-        if (word) {
-            return this.helperRepository.createQueryBuilder('helpers')
-                .where('helpers.idWord = :idWord', { idWord: word.id })
-                .orderBy('helpers.nombreVote', 'DESC')
-                .getOne(); // Retourne le premier résultat
-        }
-
-        return undefined;
-    }
-
-    async findOne(id: number): Promise<Helper | undefined> {
-        return this.helperRepository.findOne({
-            where: { id },
-            relations: ['word', 'dictation'], // Incluez les relations si nécessaire
+    
+        if (!word) return undefined;
+    
+        // Trouvez les HelperWord associés, puis les Helpers
+        const mostVoteHelper = await this.helperWordRepository.findOne({ 
+            where: { word: word 
+            },
+            relations: {
+                helper: {
+                    descriptions: true,
+                },
+            },
+            order: {
+                helper: {
+                    numberVote: "DESC",
+                },
+            },
+            // Assurez-vous que cette relation est configurée dans HelperWord
         });
-    }*/
+
+        return mostVoteHelper;
+    }
 }
