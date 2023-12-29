@@ -20,7 +20,10 @@ function App() {
 
   // URL de l'audio de la dictée
   const [audioUrl, setAudioUrl] = useState('');
-  const [rule, setRule] = useState('');   //Helper
+
+  const [helper, setHelper] = useState(null);
+
+
 
   const fetchDictationAudio = async (difficultyLevel) => {
     try {
@@ -40,14 +43,34 @@ function App() {
 
   const fetchHelperForWord = async (word) => {
     try {
-      const response = await axios.get(`http://localhost:3000/helper/word/${word}/most-votes`);
+      const response = await axios.get(`http://localhost:3000/helpers/word/${word}/most-votes`);
       const helperData = response.data;
-      setRule(helperData.description);
+      setHelper(helperData.helper);
+      //setRule(helperData.helper.title);
       // Utilisez ici les données obtenues pour afficher l'aide ou la suggestion
-      console.log(helperData); // Par exemple, afficher les données dans la console
+      console.log(helperData.helper); // Par exemple, afficher les données dans la console
     } catch (error) {
       console.error('Erreur lors de la récupération de l’aide', error);
     }
+  };
+
+  const HelperTable = ({ helper }) => {
+    return (
+      <div>
+        <h3>{helper.title}</h3>
+        {helper.descriptions && Array.isArray(helper.descriptions) && (
+          <ul>
+            {helper.descriptions.map((description, index) => (
+              // Assurez-vous que description.text est la propriété que vous souhaitez afficher
+              <li key={index}><section
+              className="not-found-controller"
+              dangerouslySetInnerHTML={{ __html: description.text }}
+          /></li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
   };
 
   const handleInputChange = (e) => {
@@ -69,7 +92,7 @@ function App() {
       if (userInput.trim().toLowerCase() === currentWord.toLowerCase()) {
         setCorrectWords([...correctWords, currentWord]);
         setUserInput(''); // Réinitialiser l'entrée pour le prochain mot
-        setRule(''); // Effacer la règle
+        setHelper(''); // Effacer la règle
         setIsCurrentInputCorrect(true);//Pour enlever le fait que les l'input soient en rouge
         if (correctWords.length + 1 === words.length) {
           console.log('Complete sentence typed correctly');
@@ -100,7 +123,7 @@ function App() {
           onKeyUp={handleKeyUp}
           placeholder="Tapez le mot ici"
         />
-        {rule && <div className="info-bulle">{rule}</div>}
+        {helper && <HelperTable helper={helper} />}
         {/* Afficher l'audio si l'URL est disponible */}
         {audioUrl && <audio src={audioUrl} controls />}
 
