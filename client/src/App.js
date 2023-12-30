@@ -56,7 +56,7 @@ function App() {
 
   const HelperTable = ({ helper }) => {
     return (
-      <div>
+      <div class="helper-bubble">
         <h3>{helper.title}</h3>
         {helper.descriptions && Array.isArray(helper.descriptions) && (
           <ul>
@@ -110,8 +110,10 @@ function App() {
     <div className="App">
       <header className="App-header">
 
-        <p>Le mot à taper est : {sentence}</p>
-        <p>Mots corrects :&nbsp;
+        {/* Afficher l'audio si l'URL est disponible */}
+        {audioUrl && <audio src={audioUrl} controls />}
+
+        <p>&nbsp;
           <span style={{ color: 'green' }}>{correctWords.join(' ')}</span>&nbsp;
           <span style={{ color: isCurrentInputCorrect ? 'inherit' : 'red' }}>
             {userInput}
@@ -121,11 +123,10 @@ function App() {
           value={userInput}
           onChange={handleInputChange}
           onKeyUp={handleKeyUp}
-          placeholder="Tapez le mot ici"
+          placeholder="Ecrire la dictée ici"
         />
         {helper && <HelperTable helper={helper} />}
-        {/* Afficher l'audio si l'URL est disponible */}
-        {audioUrl && <audio src={audioUrl} controls />}
+        <p>{sentence}</p>
 
       </header>
     </div>
