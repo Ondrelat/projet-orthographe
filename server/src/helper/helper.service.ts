@@ -23,11 +23,18 @@ export class HelperService {
         // Vous pourriez avoir besoin d'injecter d'autres dépôts si nécessaire
     ) { }
 
+
+    findOne(id: number): Promise<Helper | undefined> {
+        return this.helperRepository.findOneBy({ id });
+    }
+
     async findHelperByWordWithDescription(wordName: string): Promise<any> {
-        const word = await this.wordRepository.findOne({ where: { name: wordName } });
+        //console.log("test");
+
+        const word = await this.wordRepository.findOne({ where: { name: wordName.toUpperCase() } });
     
         if (!word) return undefined;
-    
+        
         // Trouvez les HelperWord associés, puis les Helpers
         const helperWords = await this.helperWordRepository.find({ 
             where: { word: word },
@@ -43,7 +50,8 @@ export class HelperService {
 
        
     async findByWordWithMostVotes(wordName: string): Promise<any> {
-        const word = await this.wordRepository.findOne({ where: { name: wordName } });
+
+        const word = await this.wordRepository.findOne({ where: { name: wordName.toUpperCase() } });
     
         if (!word) return undefined;
     

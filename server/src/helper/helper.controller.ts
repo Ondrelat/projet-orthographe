@@ -11,12 +11,11 @@ export class HelperController {
     findHelperbyWordWithTheirDescription(@Param('word') word: string) {
         return this.helperService.findHelperByWordWithDescription(word);
     }
-
-    /*
+    
     @Get(':id')
     findOne(@Param('id') id: number) {
         return this.helperService.findOne(id);
-    }*/
+    }
 
     // Un point de terminaison pour obtenir le helper avec le plus de votes pour un mot donné
     @Get('/word/:word/most-votes')
