@@ -1,0 +1,6 @@
+INSERT INTO Dictations (text, level, audioURL, audioName) VALUES
+('Le matin, le soleil brille et les oiseaux chantent. Les chats dans le jardin jouent avec les feuilles qui tombent.', 1, '/audios/dictee_niveau1_num1.mp3', 'dictee_niveau1_num1.mp3'),
+('Sur la route, les voitures passent rapidement. Les enfants regardent les camions et les bus aller et venir.', 1, '/audios/dictee_niveau1_num2.mp3', 'dictee_niveau1_num2.mp3'),
+('Dans le parc, il y a un grand lac avec des canards. Les gens viennent les nourrir et se promener.', 1, '/audios/dictee_niveau1_num3.mp3', 'dictee_niveau1_num3.mp3'),
+('Le ciel est bleu et il n\'y a pas de nuages. L\'après-midi, il fait chaud et tout le monde aime jouer dehors.', 1, '/audios/dictee_niveau1_num4.mp3', 'dictee_niveau1_num4.mp3'),
+('La nuit, la lune brille dans le ciel. Les étoiles scintillent et tout est calme autour.', 1, '/audios/dictee_niveau1_num5.mp3', 'dictee_niveau1_num5.mp3');
