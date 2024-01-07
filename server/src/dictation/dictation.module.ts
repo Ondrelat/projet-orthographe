@@ -10,10 +10,11 @@ import { Word } from '../helper/word.entity';
 import { HelperWord } from '../helper/helperword.entity';
 import { Type } from '../helper/type.entity';
 import { Description } from '../helper/description.entity';
+import { PollyService } from './polly.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Dictation, HelperWord, Helper, Word, Type, Description])],
-    providers: [DictationService, HelperService], // Ajoutez HelperService ici
+    providers: [DictationService, HelperService, PollyService], // Ajoutez HelperService ici
     controllers: [DictationController, HelperController], // Assurez-vous que HelperController est inclus
     exports: [DictationService]
 })

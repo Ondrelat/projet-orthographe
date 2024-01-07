@@ -1,29 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './App.css';
+import DictationForm from './components/DictationForm';
+import FetchAndDisplayHelper from './components/Helper';
 
 function App() {
+
   // Mot à taper
   const [sentence, setSentence] = useState('');
 
   const words = sentence.split(' ');
 
+  const [wordError, setWordError] = useState('');
   const [correctWords, setCorrectWords] = useState([]);
 
-  const [isCurrentInputCorrect, setIsCurrentInputCorrect] = useState(true);
-
+  const [stateWordInput, setStateWordInput] = useState('Changing');
+  //const [isLastInputCorrect, setIsLastInputCorrect] = useState(true);
   // Saisie de l'utilisateur
   const [userInput, setUserInput] = useState('');
-
   // La dernière saisie utilisateur pour détecter qu'il essaie de changer quelque chose
   const [prevInput, setPrevInput] = useState('');
 
+  const [pauseTime, setPauseTime] = useState(0); // Initialisation de pauseTime à 0
+  const audioRef = useRef(null);
   // URL de l'audio de la dictée
   const [audioUrl, setAudioUrl] = useState('');
-
-  const [helper, setHelper] = useState(null);
-
-
 
   const fetchDictationAudio = async (difficultyLevel) => {
     try {
@@ -41,44 +42,14 @@ function App() {
     fetchDictationAudio(1);
   }, []);
 
-  const fetchHelperForWord = async (word) => {
-    try {
-      const response = await axios.get(`http://localhost:3000/helpers/word/${word}/most-votes`);
-      const helperData = response.data;
-      setHelper(helperData.helper);
-      //setRule(helperData.helper.title);
-      // Utilisez ici les données obtenues pour afficher l'aide ou la suggestion
-      console.log(helperData.helper); // Par exemple, afficher les données dans la console
-    } catch (error) {
-      console.error('Erreur lors de la récupération de l’aide', error);
-    }
-  };
 
-  const HelperTable = ({ helper }) => {
-    return (
-      <div class="helper-bubble">
-        <h3>{helper.title}</h3>
-        {helper.descriptions && Array.isArray(helper.descriptions) && (
-          <ul>
-            {helper.descriptions.map((description, index) => (
-              // Assurez-vous que description.text est la propriété que vous souhaitez afficher
-              <li key={index}><section
-              className="not-found-controller"
-              dangerouslySetInnerHTML={{ __html: description.text }}
-          /></li>
-            ))}
-          </ul>
-        )}
-      </div>
-    );
-  };
 
   const handleInputChange = (e) => {
     const newValue = e.target.value;
 
     // Réinitialiser la couleur si l'utilisateur commence à modifier le mot
     if (newValue !== prevInput) {
-      setIsCurrentInputCorrect(true);
+      setStateWordInput("Changing");
     }
 
     setUserInput(newValue);
@@ -89,35 +60,59 @@ function App() {
       // La logique à exécuter lorsque la touche Espace est pressée
       const currentWord = words[correctWords.length];
 
+      // Si mon mot est correct
       if (userInput.trim().toLowerCase() === currentWord.toLowerCase()) {
-        setCorrectWords([...correctWords, currentWord]);
+        setCorrectWords([...correctWords, currentWord]); // On va au prochain mot à completer
         setUserInput(''); // Réinitialiser l'entrée pour le prochain mot
-        setHelper(''); // Effacer la règle
-        setIsCurrentInputCorrect(true);//Pour enlever le fait que les l'input soient en rouge
+
+
+        console.log(stateWordInput);
+        //Si un mot a été écrit faux et que l'audio est en pause on repart quelque seconde avant
+        if (stateWordInput === "inCorrect" && audioRef.current && audioRef.current.paused) {
+          // Reprendre 3 secondes avant si possible
+          audioRef.current.currentTime = Math.max(0, pauseTime - 3);
+          audioRef.current.play();
+        }
+
+        setStateWordInput("correct");//Pour enlever le fait que les l'input soient en rouge
         if (correctWords.length + 1 === words.length) {
           console.log('Complete sentence typed correctly');
         }
-      } else {
+      }
+      else {
         console.log('Mot incorrect');
-        setIsCurrentInputCorrect(false);
-        fetchHelperForWord(currentWord);
+
+        setStateWordInput("inCorrect");
+
+        //Si le mot est faux je met en pause la dictée
+        setPauseTime(audioRef.current.currentTime);
+        audioRef.current.pause();
+
+        setWordError(words[correctWords.length]);
       }
     }
     setPrevInput(userInput);
   };
+
+  console.log(stateWordInput)
 
   return (
     <div className="App">
       <header className="App-header">
 
         {/* Afficher l'audio si l'URL est disponible */}
-        {audioUrl && <audio src={audioUrl} controls />}
+        {audioUrl && <audio src={audioUrl} controls ref={audioRef} />}
 
-        <p>&nbsp;
+        <p>
           <span style={{ color: 'green' }}>{correctWords.join(' ')}</span>&nbsp;
-          <span style={{ color: isCurrentInputCorrect ? 'inherit' : 'red' }}>
+          <span style={{
+            color: stateWordInput === 'correct' ? 'green' :
+              stateWordInput === 'inCorrect' ? 'red' :
+                'white'
+          }}>
             {userInput}
-          </span></p>
+          </span>
+        </p>
         <input
           type="text"
           value={userInput}
@@ -125,8 +120,11 @@ function App() {
           onKeyUp={handleKeyUp}
           placeholder="Ecrire la dictée ici"
         />
-        {helper && <HelperTable helper={helper} />}
+        {stateWordInput === 'inCorrect' && <FetchAndDisplayHelper word={wordError} />}
         <p>{sentence}</p>
+        <h1>Créer une Nouvelle Dictée</h1>
+        <DictationForm />
+
 
       </header>
     </div>
