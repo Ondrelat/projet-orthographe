@@ -30,12 +30,29 @@ export class DictationController {
         @Body('text') text: string,
         @Body('level') level: number, @Res() res: Response) {
         try {
-            const audioStream = await this.pollyService.synthesizeSpeech(text);
-            const fileName = `${title.replace(/ /g, '_')}_${Date.now()}.mp3`; // Nom de fichier personnalisé
-            const filePath = await this.pollyService.saveAudioFile(audioStream, fileName);
+            const audiosUrl = "audios\\" + title;
 
-            // Optionnel : renvoyer le chemin du fichier en réponse
-            res.json({ filePath });
+            const dictationData = {
+                id: null,
+                title: title,
+                text: text,
+                level: level,
+                audioName: title,
+                audioURL: audiosUrl
+            };
+
+            const savedDictation = await this.dictationService.create(dictationData);
+
+            const regex = /[^.!?;,:]+(?:\.{3}|[.!?;,:])/g;
+            const phrases = text.match(regex);
+            const filePaths = await Promise.all(phrases.map(async (phrase, index) => {
+                const audioStream = await this.pollyService.synthesizeSpeech(phrase);
+                const fileName = `${title.replace(/ /g, '_')}_partie_${index + 1}.mp3`; // Nom de fichier avec index
+                return await this.pollyService.saveAudioFile(audioStream, fileName, title);
+            }));
+
+            // Renvoyer les chemins de tous les fichiers audio
+            res.json({ filePaths });
         } catch (error) {
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
         }

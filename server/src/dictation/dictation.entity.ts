@@ -21,4 +21,7 @@ export class Dictation {
 
     @Column({ nullable: true })
     audioName: string;
+
+    @Column()
+    title: string;
 }

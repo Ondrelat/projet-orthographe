@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import * as AWS from 'aws-sdk';
+import { existsSync, mkdirSync } from 'fs';
 
 @Injectable()
 export class PollyService {
@@ -34,7 +35,6 @@ export class PollyService {
             // Autres paramètres optionnels...
         };
 
-
         // Appeler AWS Polly pour synthétiser le texte
         const { AudioStream } = await this.polly.synthesizeSpeech(params).promise();
 
@@ -42,12 +42,21 @@ export class PollyService {
         return AudioStream as Buffer;
     }
 
-    async saveAudioFile(audioStream: Buffer, fileName: string) {
-        //const directoryPath = join(__dirname, 'C:\Users\avril\Desktop\projet-orthographe\client\public\audios');
-        const filePath = join('..\\client\\public\\audios', fileName);
+    async saveAudioFile(audioStream: Buffer, fileName: string, title: string) {
+
+        const cheminDossier = '..\\client\\public\\audios\\' + title;
+
+        //créer le dossier de la dictée
+        if (!existsSync(cheminDossier)) {
+            mkdirSync(cheminDossier, { recursive: true });
+        }
+
+        // enregisrer chaque partie de l'audio
+        const filePath = join(cheminDossier, fileName);
         writeFile(filePath, audioStream);
         return filePath;
     }
+
 
 
 

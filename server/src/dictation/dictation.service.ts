@@ -18,6 +18,11 @@ export class DictationService {
         return this.dictationRepository.findOneBy({ id });
     }
 
+    async create(dictationData: Dictation): Promise<Dictation> {
+        const dictation = this.dictationRepository.create(dictationData);
+        return this.dictationRepository.save(dictation);
+    }
+
     async getRandomDictation(difficultyLevel: number): Promise<Dictation> {
         // Récupération du nombre total de dictées pour le niveau de difficulté donné
         const count = await this.dictationRepository.count({
