@@ -15,6 +15,7 @@ const FetchAndDisplayHelper = ({ word }) => {
                     setError(null);
                 })
                 .catch(error => {
+                    console.error('Erreur lors de la récupération de l’aide', error);
                     setError(error);
                     setIsLoading(false);
                 });
@@ -23,6 +24,9 @@ const FetchAndDisplayHelper = ({ word }) => {
 
     // Rendu conditionnel en fonction des états
     if (isLoading) {
+        if (error) {
+            return <p>Erreur lors du chargement de l'aide.</p>;
+        }
         return <p>Chargement de l'aide...</p>;
     }
     else if (helper) {
