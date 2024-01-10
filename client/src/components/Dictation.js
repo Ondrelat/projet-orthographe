@@ -3,6 +3,7 @@ import axios from 'axios';
 import FetchAndDisplayHelper from './Helper';
 import NavBar from './NavBar';
 import { Link } from 'react-router-dom';
+import './Helper.css';
 
 const Dictation = () => {
 
@@ -114,9 +115,10 @@ const Dictation = () => {
 
     return (
         <div className="App">
-            <NavBar />
             <header className="App-header">
-
+                <NavBar />
+            </header>
+            <body className="App-body">
                 {/* Afficher l'audio si l'URL est disponible */}
                 {audioUrl && <audio src={audioUrl + "\\" + title + "_partie_" + currentAudioIndex + ".mp3"} controls ref={audioRef} />}
 
@@ -133,22 +135,25 @@ const Dictation = () => {
                 </p>
 
                 {/* Zone pour écrire */}
-                <input
-                    type="text"
-                    value={userInput}
-                    onChange={handleInputChange}
-                    onKeyUp={handleKeyUp}
-                    placeholder="Ecrire la dictée ici"
-                />
+                <div class="ZoneInputAndHelp">
+                    <input
+                        type="text"
+                        value={userInput}
+                        onChange={handleInputChange}
+                        onKeyUp={handleKeyUp}
+                        placeholder="Ecrire la dictée ici"
+                    />
 
-                {/* Aide */}
-                {stateWordInput === 'inCorrect' && <FetchAndDisplayHelper word={wordError} />}
+                    {/* Aide */}
+                    {stateWordInput === 'inCorrect' && <FetchAndDisplayHelper word={wordError} />}
+                </div>
+
                 {/*<p> sentence</p> */}
 
                 <Link to="/create-dictation">
                     <button>Créer une Dictée</button>
                 </Link>
-            </header>
+            </body>
         </div>
     );
 }
