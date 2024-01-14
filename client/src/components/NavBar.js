@@ -1,22 +1,12 @@
 import React from "react";
+import './NavBar.css';
 
 const Navbar = () => {
     return (
-        <nav style={{
-            backgroundColor: 'white',
-            color: 'black',
-            padding: '20px',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-        }}>
-            <ul style={{
-                listStyleType: 'none',
-                margin: 0,
-                padding: 0,
-                display: 'flex',
-                justifyContent: 'flex-end'
-            }}>
-                <li style={{ marginRight: '20px' }}>Contact</li>
-                <li>Connexion</li>
+        <nav className="navbar">
+            <ul className="nav-list">
+                <li className="nav-item"><button className="button">Contact</button></li>
+                <li><button className="button">Connexion</button></li>
             </ul>
         </nav>
 

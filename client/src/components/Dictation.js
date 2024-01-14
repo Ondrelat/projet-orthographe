@@ -118,7 +118,7 @@ const Dictation = () => {
             <header className="App-header">
                 <NavBar />
             </header>
-            <body className="App-body">
+            <section className="App-body">
                 {/* Afficher l'audio si l'URL est disponible */}
                 {audioUrl && <audio src={audioUrl + "\\" + title + "_partie_" + currentAudioIndex + ".mp3"} controls ref={audioRef} />}
 
@@ -135,7 +135,7 @@ const Dictation = () => {
                 </p>
 
                 {/* Zone pour écrire */}
-                <div class="ZoneInputAndHelp">
+                <div className="ZoneInputAndHelp">
                     <input
                         type="text"
                         value={userInput}
@@ -153,7 +153,7 @@ const Dictation = () => {
                 <Link to="/create-dictation">
                     <button>Créer une Dictée</button>
                 </Link>
-            </body>
+            </section>
         </div>
     );
 }
