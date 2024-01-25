@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DictationModule } from './dictation/dictation.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       logging: true,
     }),
     DictationModule,
+    AuthModule,
     // autres modules
   ],
   controllers: [AppController],

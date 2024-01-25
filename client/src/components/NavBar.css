@@ -33,7 +33,7 @@
 
 /* Style pour la barre de navigation */
 .navbar {
-    background-color: white;
+    background-color: #fbfbfb;
     color: black;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -49,4 +49,10 @@
 
 .nav-item {
     margin-right: 20px;
+}
+
+.round-image {
+    border-radius: 50%;
+    width: 50px;
+    height: auto;
 }
