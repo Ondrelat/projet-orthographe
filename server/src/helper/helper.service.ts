@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Helper } from './helper.entity';
 import { Word } from './word.entity';
 import { Description } from './description.entity';
-import { HelperWord } from './HelperWord.entity'; // Importez l'entité Description
+import { HelperWord } from './helperword.entity'; // Importez l'entité Description
 
 // Importez votre modèle de base de données et tout autre dépendance nécessaire
 
@@ -32,11 +32,11 @@ export class HelperService {
         //console.log("test");
 
         const word = await this.wordRepository.findOne({ where: { name: wordName.toUpperCase() } });
-    
+
         if (!word) return undefined;
-        
+
         // Trouvez les HelperWord associés, puis les Helpers
-        const helperWords = await this.helperWordRepository.find({ 
+        const helperWords = await this.helperWordRepository.find({
             where: { word: word },
             relations: {
                 helper: {
@@ -48,16 +48,17 @@ export class HelperService {
         return helperWords;
     }
 
-       
+
     async findByWordWithMostVotes(wordName: string): Promise<any> {
 
         const word = await this.wordRepository.findOne({ where: { name: wordName.toUpperCase() } });
-    
+
         if (!word) return undefined;
-    
+
         // Trouvez les HelperWord associés, puis les Helpers
-        const mostVoteHelper = await this.helperWordRepository.findOne({ 
-            where: { word: word 
+        const mostVoteHelper = await this.helperWordRepository.findOne({
+            where: {
+                word: word
             },
             relations: {
                 helper: {
