@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import FetchAndDisplayHelper from './Helper';
 import NavBar from './NavBar';
@@ -12,6 +12,7 @@ const Dictation = () => {
     const [title, setTitle] = useState('');
 
     const words = sentence.split(' ');
+    const apiUrl = process.env.REACT_APP_SERVER_URL;
 
     const [wordError, setWordError] = useState('');
     const [correctWords, setCorrectWords] = useState([]);
@@ -35,10 +36,10 @@ const Dictation = () => {
         }
     }, [currentAudioIndex]);
 
-    const fetchDictationAudio = async (difficultyLevel) => {
+    const fetchDictationAudio = useCallback(async (difficultyLevel) => {
         try {
-            //const response = await axios.get(`http://localhost:3000/dictations/randomDictation/${difficultyLevel}`);
-            const response = await axios.get(`http://localhost:3000/dictations/7`);
+            console.log(apiUrl + `/dictations/7`);
+            const response = await axios.get(apiUrl + `/dictations/7`);
             if (response.data && response.data.audioURL && response.data.text && response.data.title) {
                 // Les données sont présentes et semblent valides
                 setAudioUrl(response.data.audioURL);
@@ -48,17 +49,15 @@ const Dictation = () => {
                 // Gérer le cas où les données nécessaires ne sont pas présentes
                 console.error('Données de dictée manquantes ou incomplètes');
             }
-            // Reste de la logique pour mettre à jour l'état avec la dictée reçue
         } catch (error) {
             console.error('Erreur lors de la récupération de la dictée', error);
         }
-    };
+    }, [apiUrl]); // incluez ici toutes les variables externes dont dépend fetchDictationAudio
 
-    //hook qui permet d'attendre que tout le rendu est construit pour se lancer
     useEffect(() => {
         fetchDictationAudio(1);
-    }, []);
-
+    }, [fetchDictationAudio]); // fetchDictationAudio est maintenant une dépendance
+    
     const handleInputChange = (e) => {
         const newValue = e.target.value;
 
