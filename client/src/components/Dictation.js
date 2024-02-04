@@ -39,9 +39,15 @@ const Dictation = () => {
         try {
             //const response = await axios.get(`http://localhost:3000/dictations/randomDictation/${difficultyLevel}`);
             const response = await axios.get(`http://localhost:3000/dictations/7`);
-            setAudioUrl(response.data.audioURL); // Remplacer 'audioURL' par le nom de la propriété appropriée
-            setSentence(response.data.text);
-            setTitle(response.data.title);
+            if (response.data && response.data.audioURL && response.data.text && response.data.title) {
+                // Les données sont présentes et semblent valides
+                setAudioUrl(response.data.audioURL);
+                setSentence(response.data.text);
+                setTitle(response.data.title);
+            } else {
+                // Gérer le cas où les données nécessaires ne sont pas présentes
+                console.error('Données de dictée manquantes ou incomplètes');
+            }
             // Reste de la logique pour mettre à jour l'état avec la dictée reçue
         } catch (error) {
             console.error('Erreur lors de la récupération de la dictée', error);
