@@ -7,6 +7,7 @@ import './Helper.css';
 
 const Dictation = () => {
 
+    //
     // Mot à taper
     const [sentence, setSentence] = useState('');
     const [title, setTitle] = useState('');
