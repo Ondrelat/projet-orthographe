@@ -4,18 +4,11 @@ import FetchAndDisplayHelper from './Helper';
 import NavBar from './NavBar';
 import { Link } from 'react-router-dom';
 import './Helper.css';
-<<<<<<< HEAD
 import { useAuth0 } from '@auth0/auth0-react';
 import * as jwt_decode from "jwt-decode"// Vous pourriez avoir besoin d'installer jwt-decode
 
 const Dictation = () => {
 
-=======
-
-const Dictation = () => {
-
-    ////
->>>>>>> 95d518fa73bd8dab1c697c00573348928ad04a7e
     // Mot à taper
     const [sentence, setSentence] = useState('');
     const [title, setTitle] = useState('');
@@ -39,7 +32,6 @@ const Dictation = () => {
     const audioRef = useRef(null);
     const [currentAudioIndex, setCurrentAudioIndex] = useState(1);
 
-<<<<<<< HEAD
     //const AuthDomain = process.env.REACT_APP_AUTH_DOMAIN;
     const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
@@ -68,8 +60,6 @@ const Dictation = () => {
         fetchRoles();
     }
 
-=======
->>>>>>> 95d518fa73bd8dab1c697c00573348928ad04a7e
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.play();
