@@ -1,4 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    OneToMany
+} from 'typeorm';
 
 @Entity('Dictations')
 export class Dictation {
@@ -16,4 +21,7 @@ export class Dictation {
 
     @Column({ nullable: true })
     audioName: string;
+
+    @Column()
+    title: string;
 }

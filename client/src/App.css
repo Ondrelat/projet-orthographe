@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  overflow-x: hidden;
+  /* Empêche le débordement horizontal */
 }
 
 .App-logo {
@@ -14,24 +16,44 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #fbfbfb;
+  align-items: center;
+  justify-content: center;
+}
+
+.App-body {
+  background-color: #fbfbfb;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: rgb(54, 54, 54);
+  width: 100%;
+  height: 100%;
+  /* Assure que le header ne dépasse pas la largeur de l'écran */
+  max-width: 100%;
+  /* Empêche le header de dépasser la largeur de l'écran */
+  box-sizing: border-box;
+  /* Inclut padding et border dans la largeur totale */
 }
 
 .App-link {
   color: #61dafb;
 }
 
+audio {
+  transform: scale(1.3);
+  /* Double la taille du contrôle audio */
+  margin-top: 80px;
+  /* Ajouter de l'espace autour de l'audio pour éviter les chevauchements */
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
